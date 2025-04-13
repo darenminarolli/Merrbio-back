@@ -12,36 +12,45 @@ exports.createRequest = async (req, res) => {
 
 exports.getFarmerRequests = async (req, res) => {
     try {
-      const { farmerId } = req.params;
+      const { id } = req.params;
   
       const requests = await Request.find()
         .populate({
           path: 'productId',
-          select: 'name farmerId'
+          select: 'title description price category organic inStock farmer'
         })
         .populate({
           path: 'clientId',
-          select: 'name email' // adjust based on what you want returned
+          select: 'name email image'
         });
   
-      // Filter only requests that belong to this farmer
       const farmerRequests = requests.filter(
-        (r) => r.productId?.farmerId?.toString() === farmerId
+        (request) =>
+          request.productId &&
+          request.productId.farmer &&
+          request.productId.farmer.toString() === id
       );
   
+      // Return the entire request objects.
       res.json(farmerRequests);
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
   };
   
-  exports.acceptRequest = async (req, res) => {
+  
+  exports.updateRequestStatus = async (req, res) => {
     try {
       const { id } = req.params;
+      const { status } = req.body;
+  
+      if (status !== 'accepted' && status !== 'rejected') {
+        return res.status(400).json({ error: 'Invalid status. Must be "accepted" or "rejected".' });
+      }
   
       const updatedRequest = await Request.findByIdAndUpdate(
         id,
-        { status: 'accepted' },
+        { status },
         { new: true }
       );
   
@@ -54,3 +63,4 @@ exports.getFarmerRequests = async (req, res) => {
       res.status(400).json({ error: error.message });
     }
   };
+  

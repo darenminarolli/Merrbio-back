@@ -6,7 +6,6 @@ const requestController = require('../controllers/request.controller');
 router.get('/', productController.getAllProducts);
 router.get('/:id', requestController.getFarmerRequests);
 router.post('/', requestController.createRequest);
-router.put('/:id', productController.updateProduct);
-router.delete('/:id', productController.deleteProduct);
+router.put('/:id', requestController.updateRequestStatus);
 
 module.exports = router;

@@ -9,12 +9,15 @@ const app = express();
 connectDB();
 
 
-const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:3000';  
+const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:3000' || 'https://merr-bio.vercel.app/';  
 
+// app.use(cors({
+//   origin: CLIENT_URL,  
+//   credentials: true,   
+// }));
 app.use(cors({
-  origin: CLIENT_URL,  
-  credentials: true,   
-}));
+    credentials: true,
+})) 
   app.use(express.json())
   app.use(cookieParser())
 
